@@ -4,9 +4,13 @@ module.exports = {
 	shorten: function(url, cb) {
 		if (typeof cb === "function") {
 			http.get('http://tinyurl.com/api-create.php?url=' + encodeURIComponent(url), res => {
+        var data = '';
 				res.on('data', chunk => {
-					cb(chunk.toString())
+					data += chunk;
 				})
+        res.on('end', () => {
+          cb(data);
+        })
 			}).on("error", err => {
 				cb(null, err)
 			})
